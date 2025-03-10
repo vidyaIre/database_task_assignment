@@ -120,5 +120,102 @@ module.exports = {
                 data: error.message
             });
         }
+    },
+    updateBook: (req, res) =>{
+       // console.log(1);
+        try {
+            const { bookId, updatedData } = req.body;
+            //console.log(req.body);
+            if (bookId) {
+                //console.log("hi");
+                bookModel.updateOne(
+                    { _id: bookId },
+                    updatedData
+                ).then((response) => {
+                    console.log("response:", response);
+
+                    return res.status(200).json({
+                        success: true,
+                        statusCode: 200,
+                        message: "Books detailes updated"
+                    })
+                }).catch((error) => {
+                    console.log("error is:", error);
+                    return res.status(400).json({
+                        success: false,
+                        statusCode: 400,
+                        message: "Books updation failed!",
+                        data: error.message
+                    });
+                })
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    statusCode: 404,
+                    message: "missing required fields"
+                });
+
+            }
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "retrieve data not possible",
+                data: error.message
+            });
+
+        }
+
+    }, 
+    updateByPriceAndStock: ( req, res) =>{
+        try {
+            console.log(req.body);
+            const bookingId = req.body.bookId;
+            console.log(bookingId);
+            const bookprice = req.body.price;
+            //console.log(bookprice);
+            const bookstock = req.body.stock;
+            //console.log(bookstock);
+            if (bookingId) {
+                bookModel.findByIdAndUpdate(
+                    { _id: bookingId },
+                    { price: bookprice },
+                    { stock: bookstock }
+                
+                ).then((response) => {
+                    console.log("response:", response);
+
+                    return res.status(200).json({
+                        success: true,
+                        statusCode: 200,
+                        message: "Books detailes updated"
+                    })
+                }).catch((error) => {
+                    console.log("error is:", error);
+                    return res.status(400).json({
+                        success: false,
+                        statusCode: 400,
+                        message: "Books updation failed!",
+                        data: error.message
+                    });
+                })
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    statusCode: 404,
+                    message: "missing required fields"
+                });
+
+            }
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "retrieve data not possible",
+                data: error.message
+            });
+
+        }
+
     }
 }
