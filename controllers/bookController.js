@@ -121,8 +121,8 @@ module.exports = {
             });
         }
     },
-    updateBook: (req, res) =>{
-       // console.log(1);
+    updateBook: (req, res) => {
+        // console.log(1);
         try {
             const { bookId, updatedData } = req.body;
             //console.log(req.body);
@@ -166,8 +166,8 @@ module.exports = {
 
         }
 
-    }, 
-    updateByPriceAndStock: ( req, res) =>{
+    },
+    updateByPriceAndStock: (req, res) => {
         try {
             //console.log(req.body);
             const bookingId = req.body.bookId;
@@ -179,9 +179,11 @@ module.exports = {
             if (bookingId) {
                 bookModel.findByIdAndUpdate(
                     { _id: bookingId },
-                    { price: bookprice ,
-                     stock: bookstock }
-                
+                    {
+                        price: bookprice,
+                        stock: bookstock
+                    }
+
                 ).then((response) => {
                     //console.log("response:", response);
 
@@ -272,18 +274,18 @@ module.exports = {
     },
     softDeletedByTitle: (req, res) => {
         try {
-            
+
             const booktitle = req.body.title;
             //console.log(title);
             if (booktitle) {
                 bookModel.updateOne(
-                    { title: booktitle }, 
+                    { title: booktitle },
                     {
                         $set: {
                             isDeleted: true
                         }
                     }
-                    
+
                 ).then((response) => {
                     if (response?.modifiedCount != 0) {
                         return res.status(200).json({
@@ -321,6 +323,47 @@ module.exports = {
                 message: "internal server error",
                 data: error.message
             })
+        }
+    },
+    getBooksByPriceRange: async (req, res) => {
+        try {
+            const { min, max } = req.body;
+            console.log(min, max);
+            if (min && max) {
+                console.log("hi")
+                const books = await bookModel.find({ price: { $gte: min, $lte: max } });
+
+                console.log(books);
+                if (books.length > 0) {
+                    res.status(200).json({
+                        success: true,
+                        statusCode: 200,
+                        count: books.length,
+                        message: "Books retrieved within the price range",
+                        data: books
+                    })
+                } else {
+                    res.status(400).json({
+                        success: false,
+                        statusCode: 400,
+                        message: "No books found within the given price range"
+                    })
+                }
+            } else {
+                res.status(400).json({
+                    success: false,
+                    statusCode: 400,
+                    message: "min and max values are required"
+                })
+            }
+        } catch (error) {
+            //console.log("Error is :", error);
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "internal server error",
+                data: error.message
+            });
         }
     }
 }
