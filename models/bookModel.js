@@ -22,7 +22,7 @@ const bookSchema = new mongoose.Schema({
     },
     language: {
         type: String,
-        enum: ["English", "Malayalm", "Hindi", "Tamil"],
+        enum: ["English", "Malayalam", "Hindi", "Tamil"],
         required: true
 
     },
@@ -42,5 +42,5 @@ const bookSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const bookModel = mongoose.model('book',bookSchema);
+const bookModel = mongoose.model('Book',bookSchema);
 module.exports = bookModel;
