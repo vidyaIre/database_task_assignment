@@ -42,7 +42,7 @@ module.exports = {
     getAllBook: async (req, res) => {
         try {
             const books = await bookModel.find({ isDeleted: false });
-            console.log(books);
+            //console.log(books);
 
             return res.status(200).json({
                 success: true,
@@ -100,7 +100,7 @@ module.exports = {
         try {
             const authorName = req.body.author;
             //console.log("hi");
-            console.log(authorName);
+            //console.log(authorName);
             const books = await bookModel.find({ author: authorName });
             //console.log(books);
 
@@ -327,33 +327,37 @@ module.exports = {
     },
     getBooksByPriceRange: async (req, res) => {
         try {
-            const { min, max } = req.body;
-            console.log(min, max);
+            // const { min, max } = req.body;
+            //console.log(min, max);
             if (min && max) {
                 console.log("hi")
                 const books = await bookModel.find({ price: { $gte: min, $lte: max } });
 
                 console.log(books);
-                if (books.length > 0) {
+                if (books) {
                     res.status(200).json({
                         success: true,
                         statusCode: 200,
                         count: books.length,
-                        message: "Books retrieved within the price range",
-                        data: books
+                        message: "get books form the range between the values",
+                        data: req
                     })
-                } else {
+                } else (
                     res.status(400).json({
                         success: false,
                         statusCode: 400,
-                        message: "No books found within the given price range"
+                        message: "min and max "
+
                     })
-                }
+                )
+
+
             } else {
                 res.status(400).json({
                     success: false,
                     statusCode: 400,
-                    message: "min and max values are required"
+                    message: "min and max is not given"
+
                 })
             }
         } catch (error) {
@@ -361,9 +365,73 @@ module.exports = {
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                message: "internal server error",
+                message: "invalid server details",
                 data: error.message
             });
         }
+    },
+    getTotalBooks: async (req, res) => {
+        //const totalBooks = await bookModel.countDocuments();
+        //console.log(totalBooks);
+        try {
+            const total = await bookModel.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$stock" }
+                    }
+                }
+            ]);
+            //console.log("Total:",total);
+            const count = total.length > 0 ?total[0].total:0;
+            if (count) {
+               console.log("total books:",count);
+                res.status(200).json({
+                    success: true,
+                    statusCode: 200,
+                    message: "get total books",
+                    data:count
+                   
+                })
+            } else (
+                res.status(400).json({
+                    success: false,
+                    statusCode: 400,
+                    message: "can not find the total books:"
+
+                })
+            )
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "invalid server details",
+                data: error.message
+            });
+        }
+    },
+    getSoretedBooks: async (req, res) => {
+
+        try {
+            const books = await bookModel.find().sort({ price: 1 });
+            //console.log(books);
+           
+            return res.status(200).json({
+                success: true,
+                statusCode: 200,
+                count: books.length,
+                message: "Retrieve all books:",
+                data: books
+            });
+        } catch (error) {
+            //console.log("Error is :", error);
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "invalid server details",
+                data: error.message
+            });
+        }
+
     }
 }

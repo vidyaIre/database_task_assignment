@@ -6,7 +6,9 @@ const { createBook,
     updateByPriceAndStock,
     softDeleteBook, 
     softDeletedByTitle,
-    getBooksByPriceRange} = require('../controllers/bookController');
+    getBooksByPriceRange,
+    getTotalBooks,
+    getSoretedBooks} = require('../controllers/bookController');
 const errorHandler = require('../middleware/errorHandler');
 
 const router = require('express').Router();
@@ -22,5 +24,7 @@ router.put('/updateByPriceAndStock', errorHandler, updateByPriceAndStock);
 router.delete('/softDeleteBook', errorHandler, softDeleteBook);
 router.delete('/softDeletedByTitle', errorHandler, softDeletedByTitle);
 router.get('/getBooksByPriceRange', errorHandler, getBooksByPriceRange);
+router.get('/getTotalBooks', errorHandler, getTotalBooks);
+router.get('/getSoretedBooks', errorHandler, getSoretedBooks);
 
 module.exports = router;
