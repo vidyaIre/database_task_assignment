@@ -8,7 +8,7 @@ const connectDB = async () => {
             throw new error("mongodb uri  variable is not defined!!!!");
         }
         const link = await mongoose.connect(mongoDb);
-        console.log("EntryApp Database connected");
+        console.log("EntryApp Database connected successfully.....");
        // console.log(`MONODB connected: ${link.connection.host}`);
     } catch(error){
         console.log("error in Db is:", error);
