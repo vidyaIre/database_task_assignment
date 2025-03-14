@@ -13,7 +13,7 @@ const errorHandler = require('../middleware/errorHandler');
 
 const router = require('express').Router();
 
-module.exports = router;
+
 
 router.post('/createBook', errorHandler, createBook);
 router.get('/getAllBook', errorHandler, getAllBook);
