@@ -170,15 +170,15 @@ module.exports = {
     updateByPriceAndStock: (req, res) => {
         try {
             //console.log(req.body);
-            const bookingId = req.body.bookId;
+            const bookTitle = req.body.title;
             //console.log(bookingId);
             const bookprice = req.body.price;
             //console.log(bookprice);
             const bookstock = req.body.stock;
             //console.log(bookstock);
-            if (bookingId) {
-                bookModel.findByIdAndUpdate(
-                    { _id: bookingId },
+            if (bookTitle) {
+                bookModel.updateOne(
+                    { title: bookTitle },
                     {
                         price: bookprice,
                         stock: bookstock
@@ -278,7 +278,7 @@ module.exports = {
             const booktitle = req.body.title;
             //console.log(title);
             if (booktitle) {
-                bookModel.updateOne(
+                bookModel.deleteOne(
                     { title: booktitle },
                     {
                         $set: {
